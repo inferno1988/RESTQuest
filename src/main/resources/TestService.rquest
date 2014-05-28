@@ -1,10 +1,9 @@
 import org.ifno.restquest.authorize.Basic;
-import org.ifno.restquest.authorize.NTLM;
 
 request TestService {
 	config {
 		method("POST");
-		url("http");
+		url("http://google.com/");
 	}
 
     header {

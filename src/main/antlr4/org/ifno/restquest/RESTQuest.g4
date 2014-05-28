@@ -36,7 +36,7 @@ functionCall
     ;
 
 expression
-    :   NEW Identifier '(' parameterList ')'
+    :   NEW Identifier '(' parameterList? ')'
     ;
 
 parameterList
