@@ -1,72 +1,94 @@
 grammar RESTQuest;
 
-compileObject
-    :   importDeclaration* requestDeclaration EOF
+request
+    :  PACKAGE packagePath SEMI REQUEST Identifier '{' requestSegment* '}' EOF
     ;
 
-importDeclaration
-    :   IMPORT importPath SEMI;
-
-requestDeclaration
-    :   REQUEST Identifier requestBody
+packagePath
+    :   Identifier ('.' Identifier)* 
     ;
 
-requestBody
-    : OCURLY segmentDeclaration* CCURLY
+requestSegment
+    :   Segment '(' paramList? ')' block
     ;
 
-segmentDeclaration
-    :  typedSegment | simpleSegment
-    ;
-
-simpleSegment
-    :   (CONFIG|HEADER|MAIN) block
-    ;
-
-typedSegment
-    :  type (PARAMETERS|RESPONSE) block
-    ;
-
-block
-    : OCURLY functionCall* CCURLY
-    ;
-
-functionCall
-    :   (METHOD|URL|AUTH) '(' (StringLiteral|expression) ')' SEMI
-    ;
-
-expression
-    :   NEW Identifier '(' parameterList? ')'
-    ;
-
-parameterList
+paramList
     :   Identifier (',' Identifier)*
     ;
 
-importPath
-    : Identifier ('.' Identifier)*
+block
+    :   '{' expression* '}'
     ;
 
-IMPORT: 'import';
+expression
+    :   declaration
+    |   assignment
+    ;
+
+declaration
+    :   ReservedWord dec_value SEMI
+    ;
+
+assignment
+    :   ReservedWord key COLON value SEMI
+    ;
+
+key
+    :   (StringLiteral|parameter|formattedString)
+    ;
+
+value
+    :   (StringLiteral|parameter|formattedString)
+    ;
+
+dec_value
+    :   (StringLiteral|parameter|formattedString)
+    ;
+
+formattedString
+    : SINGLE .*? parameter .*? (.*? parameter .*?)+ SINGLE
+    ;
+
+parameter
+    : Parameter
+    ;
+
+Segment
+    :   DECLARATION
+    |   HEADERS
+    |   DATA
+    ;
+
+ReservedWord
+    :   METHOD
+    |   URL
+    |   HEADER
+    |   RAW
+    ;
+
+Parameter
+    :   DOLLAR Identifier
+    ;
+
 METHOD: 'method';
 URL: 'url';
+HEADERS: 'headers';
 HEADER: 'header';
-PARAMETERS: 'parameters';
-RESPONSE: 'response';
-MAIN: 'main';
+DATA: 'data';
+RAW: 'raw';
 REQUEST: 'request';
 OCURLY: '{';
 CCURLY: '}';
-CONFIG: 'config';
-AUTH: 'auth';
-NEW: 'new';
-JSON: 'json';
-XML: 'xml';
+DECLARATION: 'declaration';
+PACKAGE: 'package';
 DOT: '.';
 COMMA: ',';
 OBRACE: '(';
 CBRACE: ')';
 SEMI : ';';
+DOLLAR: '$';
+COLON: ':';
+SINGLE: '\'';
 
 Identifier
     :   RestquestLetter RestquestLetterOrDigit*
@@ -79,19 +101,6 @@ fragment RestquestLetter
 fragment RestquestLetterOrDigit
     :   [a-zA-Z0-9$_]
     ;
-
-REQUEST_METHODS: (POST|GET|PUT|DELETE);
-fragment POST: 'POST';
-fragment GET: 'GET';
-fragment PUT: 'PUT';
-fragment DELETE: 'DELETE';
-
-type
-    : 'json'
-    | 'xml'
-    ;
-
-
 
 StringLiteral
     : '"' StringCharacters? '"'

@@ -1,24 +1,25 @@
-import org.ifno.restquest.authorize.Basic;
+package org.ifno.restquest.demo;
 
 request TestService {
-	config {
-		method("POST");
-		url("http://google.com/");
+	declaration(requestUrl) {
+		method "POST";
+		url $request_url;
 	}
 
-    header {
-        auth(new Basic(login, password));
+    headers(userAgent, auth) {
+        header "Accept-Encoding" : "gzip,deflate";
+        header "User-Agent" : "UA";
+        header "Authorization" : $auth;
     }
 
-    json parameters {
-
-    }
-
-    json response {
-
-    }
-
-    main {
-
+    data(appToken, devToken, userId) {
+        raw '
+            {
+                "ApplicationTokenValue" : $app_token,
+                "DeviceToken" : $dev_token,
+                "EntUserID" : $user_id,
+                "Stub" : "string param",
+            }
+        ';
     }
 }

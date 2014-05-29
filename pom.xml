@@ -16,15 +16,9 @@
         </dependency>
 
         <dependency>
-            <groupId>javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.android</groupId>
-            <artifactId>spring-android-rest-template</artifactId>
-            <version>1.0.1.BUILD-SNAPSHOT</version>
+            <groupId>bcel</groupId>
+            <artifactId>bcel</artifactId>
+            <version>5.1</version>
         </dependency>
     </dependencies>
 
